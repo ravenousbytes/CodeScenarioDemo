@@ -6,28 +6,37 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AdministrationTool.Data.Models;
+using AutoMapper;
 
 namespace AdministrationTool.Web.Controllers
 {
     public class UsersController : Controller
     {
         private readonly IUserData db;
-        //public IEnumerable<SelectListItem> Users { get; set; }
+        private readonly IMapper mapper;
 
-        public UsersController(IUserData db)
+        public UsersController(IUserData db, IMapper mapper)
         {
             this.db = db;
+            this.mapper = mapper;
         }
 
         [HttpGet]
-        public ActionResult Index(string orderby)
+        public ActionResult IndexMVC(string orderby)
         {
-            var model = db.GetAll();
+            var users = db.GetAll();
+            var model = mapper.Map<IEnumerable<UserViewModel>>(users);
             SortModel(ref orderby, ref model);
             return View(model);
         }
 
-        private void SortModel(ref string orderby, ref IEnumerable<User> model)
+        [HttpGet]
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        private void SortModel(ref string orderby, ref IEnumerable<UserViewModel> model)
         {
             if (string.IsNullOrEmpty(orderby))
                 orderby = "";
@@ -98,14 +107,15 @@ namespace AdministrationTool.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult Details(string id)
+        public ActionResult Details(string principalname)
         {
-            var user = !string.IsNullOrWhiteSpace(id) ? db.Get(new Guid(id)) : null;
+            var user = !string.IsNullOrWhiteSpace(principalname) ? db.Get(principalname) : null;
             if(user == null)
             {
                 return View("NotFound");
             }
-            var model = new UserViewModel(user, db);
+            var model = mapper.Map<UserViewModel>(user);
+            model.Initialize(db);
             return View(model);
         }
 
@@ -122,12 +132,13 @@ namespace AdministrationTool.Web.Controllers
         {
             if (user != null)
                 user.Initialize(db);
+            user.ManagerPrincipalName = db.Get(user.ManagerId)?.PrincipalName;
             ModelState.Clear();
             TryValidateModel(user);
             if( ModelState.IsValid)
             {
-                user.Manager = db.Get(user.ManagerId);
-                db.Add(user);
+                user.Manager = mapper.Map<UserViewModel>(db.Get(user.ManagerId));
+                db.Add(mapper.Map<User>(user));
                 TempData["Message"] = $"Added user {user.LastName}, {user.FirstName}";
                 return RedirectToAction("Details", new { id = user.Id });
             }
@@ -135,14 +146,15 @@ namespace AdministrationTool.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(string id)
+        public ActionResult Edit(string principalname)
         {
-            var user = !string.IsNullOrWhiteSpace(id) ? db.Get(new Guid(id)) : null;
+            var user = !string.IsNullOrWhiteSpace(principalname) ? db.Get(principalname) : null;
             if (user == null)
             {
                 return View("NotFound");
             }
-            var model = new UserViewModel(user, db);
+            var model = mapper.Map<UserViewModel>(user);
+            model.Initialize(db);
             return View(model);
         }
 
@@ -150,10 +162,13 @@ namespace AdministrationTool.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(UserViewModel user)
         {
+            user.ManagerPrincipalName = db.Get(user.ManagerId)?.PrincipalName;
+            ModelState.Clear();
+            ValidateModel(user);
             if (ModelState.IsValid)
             {
-                user.Manager = db.Get(user.ManagerId);
-                db.Update(user);
+                user.Manager = mapper.Map<UserViewModel>(db.Get(user.ManagerId));
+                db.Update(mapper.Map<User>(user));
                 TempData["Message"] = $"Updated user {user.LastName}, {user.FirstName}";
                 return RedirectToAction("Details", new { id = user.Id });
             }
@@ -164,21 +179,23 @@ namespace AdministrationTool.Web.Controllers
         [HttpGet]
         public ActionResult OrganizationChart()
         {
-            var owners = db.GetAll();
-            owners = owners.Where(u => u.Manager.Id == u.Id);
-            List<UserViewModel> model = new List<UserViewModel>();
-            UserViewModel owner = null;
-            foreach(var temp in owners)
-            {
-                owner = new UserViewModel(temp, db);
-            }
-            model = owner.DirectReports as List<UserViewModel>;
-            if (model.Count <= 0)
-            {
-                TempData["Message"] = "Sorry, there is no owner of the organization.";
-            }
+            //    var users = db.GetAll();
+            //    var model = UserViewModel.GetAll(users);
+            //    //owners = owners.Where(u => u.Manager.Id == u.Id);
+            //    //List<UserViewModel> model = new List<UserViewModel>();
+            //    //UserViewModel owner = null;
+            //    //foreach(var temp in owners)
+            //    //{
+            //    //    owner = new UserViewModel(temp, db);
+            //    //}
+            //    //model = owner.DirectReports as List<UserViewModel>;
+            //    //if (model.Count <= 0)
+            //    //{
+            //    //    TempData["Message"] = "Sorry, there is no owner of the organization.";
+            //    //}
+            //    return View(model.ToList());
 
-            return View(model.ToList());
+            return View();
+            }
         }
-    }
 }

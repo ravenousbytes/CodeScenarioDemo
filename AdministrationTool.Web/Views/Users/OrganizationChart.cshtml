@@ -1,6 +1,6 @@
-﻿@model IEnumerable<AdministrationTool.Web.Models.UserViewModel>
-@using System.Web.UI.WebControls
-@using AdministrationTool.Web.Models;
+﻿@{
+    ViewBag.Title = "IndexNg";
+}
 
 <div class="row">
     <div class="col-md-12">
@@ -9,6 +9,10 @@
     </div>
 </div>
 
+<div>
+    <p>Try <a href="https://developers.google.com/chart/interactive/docs/gallery/orgchart" target="_blank">Google Organization Chart</a> with the user API.</p>
+    <p>May need to create some functionality in the API. E.g.- IEnumerable&lt;User&gt; DirectReports of the user.</p>
+</div>
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>

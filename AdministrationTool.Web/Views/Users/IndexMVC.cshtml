@@ -1,0 +1,76 @@
+﻿@model IEnumerable<AdministrationTool.Web.Models.UserViewModel>
+
+@{
+    ViewBag.Title = "Users";
+}
+
+<h2>Users</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create") | @Html.ActionLink("View Organization Chart", "OrganizationChart")
+</p>
+<table id="usersdata" class="table">
+    <tr>
+        <th>
+            @Html.ActionLink(Html.DisplayNameFor(model => model.PrincipalName).ToHtmlString(), "Index", new { orderBy = ViewBag.PrincipalSort })
+        </th>
+        <th>
+            @Html.ActionLink(Html.DisplayNameFor(model => model.FirstName).ToHtmlString(), "Index", new { orderBy = ViewBag.FirstNameSort })
+        </th>
+        <th>
+            @Html.ActionLink(Html.DisplayNameFor(model => model.LastName).ToHtmlString(), "Index", new { orderBy = ViewBag.LastNameSort })
+        </th>
+        <th>
+            @Html.ActionLink(Html.DisplayNameFor(model => model.Email).ToHtmlString(), "Index", new { orderBy = ViewBag.EmailSort })
+        </th>
+        <th>
+            @Html.ActionLink(Html.DisplayNameFor(model => model.TelephoneNumber).ToHtmlString(), "Index", new { orderBy = ViewBag.TelephoneNumberSort })
+        </th>
+        <th>
+            @Html.ActionLink(Html.DisplayNameFor(model => model.Enabled).ToHtmlString(), "Index", new { orderBy = ViewBag.EnabledSort })
+        </th>
+        <th>
+            @Html.ActionLink(Html.DisplayNameFor(model => model.Title).ToHtmlString(), "Index", new { orderBy = ViewBag.TitleSort })
+        </th>
+        <th>
+            @Html.ActionLink(Html.DisplayNameFor(model => model.Manager).ToHtmlString(), "Index", new { orderBy = ViewBag.ManagerSort })
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PrincipalName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TelephoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Enabled)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Manager.LastName) @Html.DisplayFor(modelItem => item.Manager.FirstName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { principalName = item.PrincipalName }) |
+                @Html.ActionLink("Details", "Details", new { principalName = item.PrincipalName })
+            </td>
+        </tr>
+    }
+
+</table>
+

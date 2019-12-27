@@ -20,17 +20,21 @@ namespace AdministrationTool.Web
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
+                        "~/Scripts/bootstrap.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                        "~/Content/bootstrap.css",
+                        "~/Content/ui-bootstrap-csp.css",
+                        "~/Content/site.css"));
 
-            bundles.Add(new ScriptBundle("~/bundles/fontawesome").Include(
-                    "~/lib/font-awesome/js/fontawesome.js"));
+            bundles.Add(new ScriptBundle("~/bundles/angular").Include(
+                        "~/Scripts/angular.js",
+                        "~/Scripts/angular-animate.js",
+                        "~/Scripts/angular-touch.js",
+                        "~/Scripts/angular-ui/ui-bootstrap*"));
 
-            bundles.Add(new StyleBundle("~/Content/fontawesome").Include(
-                    "~/lib/font-awesome/css/fontawesome.css"));
+            bundles.Add(new ScriptBundle("~/bundles/users").Include(
+                        "~/Scripts/Users/controller.js"));
         }
     }
 }

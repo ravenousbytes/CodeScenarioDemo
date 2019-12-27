@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AdministrationTool.Data.Services
 {
@@ -42,8 +43,13 @@ namespace AdministrationTool.Data.Services
 
         public void Add(User user)
         {
-            users.Add(user);
             user.Id = new Guid();
+            users.Add(user);
+        }
+
+        public void Delete(User user)
+        {
+            users.RemoveAll(u => u.Id == user.Id);
         }
 
         public User Get(Guid id)
@@ -51,9 +57,29 @@ namespace AdministrationTool.Data.Services
             return users.FirstOrDefault(u => u.Id == id);
         }
 
+        public User Get(string principalName)
+        {
+            return users.FirstOrDefault(u => u.PrincipalName == principalName);
+        }
+
         public IEnumerable<User> GetAll()
         {
             return users;
+        }
+
+        public async Task<IEnumerable<User>> GetAllAsync()
+        {
+            return users;
+        }
+
+        public bool SaveChanges()
+        {
+            return true;
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return true;
         }
 
         public void Update(User usermod)

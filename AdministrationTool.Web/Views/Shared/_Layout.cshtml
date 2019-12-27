@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Code Scenario</title>
     @Styles.Render("~/Content/css")
-    @Styles.Render("~/Content/fontawesome")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/angular")
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -22,12 +22,13 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Users", "Index", "Users")</li>
+                    <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="container body-content">
-        @if(TempData["Message"] != null)
+        @if (TempData["Message"] != null)
         {
             <div class="alert alert-info">
                 @TempData["Message"]
@@ -42,7 +43,6 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/fontawesome")
     @RenderSection("scripts", required: false)
 </body>
 </html>

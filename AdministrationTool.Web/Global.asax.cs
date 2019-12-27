@@ -20,5 +20,13 @@ namespace AdministrationTool.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             ContainerConfig.RegisterContainer(GlobalConfiguration.Configuration);
         }
+        protected void Application_Error(object sender, EventArgs e)
+        {
+            Exception exception = Server.GetLastError();
+            Response.Clear();
+
+            //TODO: Log error or integrate a package such as Elmah for exception tracking/notification. 
+            //TODO: Send to a friendly error page.
+        }
     }
 }

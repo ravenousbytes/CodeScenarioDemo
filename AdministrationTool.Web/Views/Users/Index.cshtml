@@ -1,75 +1,90 @@
-﻿@model IEnumerable<AdministrationTool.Data.Models.User>
-
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "Users";
 }
 
-<h2>Index</h2>
+<h2>Users</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create") | @Html.ActionLink("View Organization Chart", "OrganizationChart")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.PrincipalName).ToHtmlString(), "Index", new { orderBy = ViewBag.PrincipalSort })
-        </th>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.FirstName).ToHtmlString(), "Index", new { orderBy = ViewBag.FirstNameSort })
-        </th>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.LastName).ToHtmlString(), "Index", new { orderBy = ViewBag.LastNameSort })
-        </th>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Email).ToHtmlString(), "Index", new { orderBy = ViewBag.EmailSort })
-        </th>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.TelephoneNumber).ToHtmlString(), "Index", new { orderBy = ViewBag.TelephoneNumberSort })
-        </th>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Enabled).ToHtmlString(), "Index", new { orderBy = ViewBag.EnabledSort })
-        </th>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Title).ToHtmlString(), "Index", new { orderBy = ViewBag.TitleSort })
-        </th>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Manager).ToHtmlString(), "Index", new { orderBy = ViewBag.ManagerSort })
-        </th>
-        <th></th>
-    </tr>
+<div ng-app="userViewer">
+    <div ng-controller="UsersController">
+        <div class="form-group col-md-3">
+            <label class="control-label" for="sorting">Sort</label>
+            <select type="sorting" ng-model="usersSortOrder" class="form-control">
+                <option value="+principalName">Principal name</option>
+                <option value="-principalName">Principal name descending</option>
+                <option value="+firstName">First name</option>
+                <option value="-firstName">First name decending</option>
+                <option value="+lastName">Last name</option>
+                <option value="-lastName">Last name decending</option>
+                <option value="+email">E-mail</option>
+                <option value="-email">E-mail decending</option>
+                <option value="+telephoneNumber">Telephone number</option>
+                <option value="-telephoneNumber">Telephone number decending</option>
+                <option value="+enabled">Enabled</option>
+                <option value="-enabled">Enabled decending</option>
+                <option value="+title">Title</option>
+                <option value="-title">Title decending</option>
+                <option value="+managerFullName">Manager</option>
+                <option value="-managerFullName">Manager decending</option>
+            </select>
+        </div>
+        <div class="form-group col-md-3">
+            <label class="control-label" for="PrincipalName">Filter</label>
+            <input placeholder="Filter by all fields." ng-model="searchText" class="form-control" />
+        </div>
+        <table ng-show="users" class="table">
+            <thead>
+                <tr>
+                    <th>Principal name</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>E-mail</th>
+                    <th>Telephone number</th>
+                    <th>Enabled</th>
+                    <th>Title</th>
+                    <th>Manager</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tr ng-repeat="user in users | orderBy:usersSortOrder | filter:searchText">
+                <td>{{user.principalName}}</td>
+                <td>{{user.firstName}}</td>
+                <td>{{user.lastName}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.telephoneNumber}}</td>
+                <td>{{user.enabled}}</td>
+                <td>{{user.title}}</td>
+                <td>{{user.managerFullName}}</td>
+                <td>
+                    <a ng-href="/users/edit?principalName={{user.principalName}}">Edit</a> |
+                    <a ng-href="/users/details?principalName={{user.principalName}}">Details</a>
+                </td>
+            </tr>
+        </table>
+        @*<nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li>
+                    <a href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li>
+                    <a href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>*@
+    </div>
+</div>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.PrincipalName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TelephoneNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Enabled)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Manager.LastName) @Html.DisplayFor(modelItem => item.Manager.FirstName)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id })
-            </td>
-        </tr>
-    }
-
-</table>
+@section Scripts {
+    @Scripts.Render("~/bundles/users")
+}

@@ -1,7 +1,9 @@
 ﻿using AdministrationTool.Data.Services;
+using AdministrationTool.Web.Mapping;
 using Autofac;
 using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,11 @@ namespace AdministrationTool.Web
             var builder = new ContainerBuilder();
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
             builder.RegisterApiControllers(typeof(MvcApplication).Assembly);
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new UserMappingProfile());
+            });
+            builder.RegisterInstance(config.CreateMapper()).As<IMapper>().SingleInstance();
             //Test data - in memory
             builder.RegisterType<TestUserData>().As<IUserData>().SingleInstance();
             //Data - database
